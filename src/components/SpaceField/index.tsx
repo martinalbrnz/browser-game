@@ -2,10 +2,10 @@ import { createSignal, onCleanup } from "solid-js";
 import styles from "./space-field.module.scss";
 
 const SpaceField = () => {
-  const [ball, setBall] = createSignal({ x: 200, y: 80 });
+  const [ball, setBall] = createSignal({ x: 245, y: 125 });
   const [mov, setMov] = createSignal({ x: 1, y: 1 });
 
-  const [player, setPlayer] = createSignal({ x: 240, y: 120 });
+  const [player, setPlayer] = createSignal({ x: 265, y: 145 });
 
   const ballSize = 10;
   const playerSize = 20;
@@ -21,19 +21,39 @@ const SpaceField = () => {
     if (ball().y <= 0) setMov({ y: Math.abs(mov().y), x: mov().x });
   }
 
-  function normalize(): void {}
+  function normalize(angle: number, magnitude: number = 1): void {}
 
   function checkPlayerCollision(): boolean {
-    const collX = Math.abs(ball().x - player().x) < (ballSize + playerSize) / 2;
-    const collY = Math.abs(ball().y - player().y) < (ballSize + playerSize) / 2;
-    return collX && collY;
+    return (
+      Math.abs(
+        Math.sqrt(
+          Math.pow(ball().x + ballSize / 2 - (player().x + playerSize / 2), 2) +
+            Math.pow(ball().y + ballSize / 2 - (player().y + playerSize / 2), 2)
+        )
+      ) <=
+      (ballSize + playerSize) / 2
+    );
+  }
+
+  function bounce() {
+    const ballAngle =
+      (Math.atan2(
+        ball().y + ballSize / 2 - (player().y + playerSize / 2),
+        ball().x + ballSize / 2 - (player().x + playerSize / 2)
+      ) /
+        Math.PI) *
+      180;
+    const movAngle = (Math.atan2(mov().y, mov().x) / Math.PI) * 180;
+    const newAngle = ballAngle - movAngle;
   }
 
   const tick = setInterval(() => {
     checkCollision();
-    // checkPlayerCollision();
+    if (checkPlayerCollision()) bounce();
     setBall({ x: ball().x + mov().x, y: ball().y + mov().y });
-  }, 100);
+  }, 16);
+
+  const stop = () => clearInterval(tick);
 
   onCleanup(() => clearInterval(tick));
 
@@ -42,7 +62,7 @@ const SpaceField = () => {
       <div class={styles.positionContainer}>
         <p>X: {ball().x}</p>
         <p>Y: {ball().y}</p>
-        <p>Collision?: {() => (checkPlayerCollision() ? "true" : "false")}</p>
+        <button onclick={stop}>Stop</button>
       </div>
       <div class={styles.field}>
         <div
