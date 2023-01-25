@@ -1,0 +1,35 @@
+.fieldContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	outline: 2px solid black;
+	width: 600px;
+	height: 480px;
+
+	.positionContainer {
+		display: flex;
+	}
+
+	.field {
+		position: relative;
+		width: 480px;
+		height: 360px;
+		outline: 2px solid red;
+
+		.ball {
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			border-radius: 5px;
+			outline: 1px solid blue;
+		}
+
+		.player {
+			position: absolute;
+			width: 20px;
+			height: 20px;
+			border-radius: 10px;
+			outline: 2px solid green;
+		}
+	}
+}
