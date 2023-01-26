@@ -21,7 +21,7 @@
       position: absolute;
       width: 10px;
       height: 10px;
-      border-radius: 5px;
+      // border-radius: 5px;
       background-color: blue;
     }
 
@@ -29,8 +29,14 @@
       position: absolute;
       width: 20px;
       height: 20px;
-      border-radius: 10px;
+      border-radius: 2px;
+    }
+
+    .playerA {
       background-color: green;
+    }
+    .playerB {
+      background-color: chocolate;
     }
   }
 }
