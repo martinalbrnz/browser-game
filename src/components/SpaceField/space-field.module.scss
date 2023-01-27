@@ -4,7 +4,7 @@
   align-items: center;
   outline: 2px solid black;
   width: 600px;
-  height: 480px;
+  height: 580px;
 
   .positionContainer {
     display: flex;
@@ -21,15 +21,22 @@
       position: absolute;
       width: 10px;
       height: 10px;
-      // border-radius: 5px;
+      border-radius: 5px;
       background-color: blue;
     }
 
     .player {
       position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 20px;
       height: 20px;
       border-radius: 2px;
+
+      span {
+        color: white;
+      }
     }
 
     .playerA {
@@ -37,6 +44,11 @@
     }
     .playerB {
       background-color: chocolate;
+    }
+
+    .goal {
+      position: absolute;
+      background-color: blueviolet;
     }
   }
 }
