@@ -6,13 +6,13 @@ import styles from "./space-field.module.scss";
 const SpaceField = () => {
   const ballSize = 10;
   const playerSize = 20;
-  const maxWidth = 500;
-  const maxHeight = 320;
-  const goalHeight = 120;
+  const maxWidth = 1050;
+  const maxHeight = 680;
+  const goalHeight = 150;
   const goalWidth = 10;
   const tickTime = 10;
   const maxOffset1 = 100; // second and fourth
-  const maxOffset2 = 60; // first and third
+  const maxOffset2 = 75; // first and third
   const ballInitial = {
     x: (maxWidth - ballSize) / 2,
     y: (maxHeight - ballSize) / 2,
@@ -185,8 +185,8 @@ const SpaceField = () => {
     /* Second and fourth columns A player */
     if (
       gamepadA?.axes &&
-      ((gamepadA?.axes[3]! > 0.05 && offsetA1Y() < maxOffset1) ||
-        (gamepadA?.axes[3]! < -0.05 && offsetA1Y() > -maxOffset1)) &&
+      ((gamepadA?.axes[3]! > 0.09 && offsetA1Y() < maxOffset1) ||
+        (gamepadA?.axes[3]! < -0.09 && offsetA1Y() > -maxOffset1)) &&
       !gamepadA?.buttons[1].pressed &&
       !gamepadA?.buttons[0].pressed
     ) {
@@ -197,8 +197,8 @@ const SpaceField = () => {
     /* First and third columns */
     if (
       gamepadA?.axes &&
-      ((gamepadA?.axes[1]! > 0.05 && offsetA2Y() < maxOffset2) ||
-        (gamepadA?.axes[1]! < -0.05 && offsetA2Y() > -maxOffset2)) &&
+      ((gamepadA?.axes[1]! > 0.09 && offsetA2Y() < maxOffset2) ||
+        (gamepadA?.axes[1]! < -0.09 && offsetA2Y() > -maxOffset2)) &&
       !gamepadA?.buttons[2].pressed &&
       !gamepadA?.buttons[3].pressed
     ) {
@@ -209,8 +209,8 @@ const SpaceField = () => {
     /* Second and fourth columns B player */
     if (
       gamepadB?.axes &&
-      ((gamepadB?.axes[1]! > 0.05 && offsetB1Y() < maxOffset1) ||
-        (gamepadB?.axes[1]! < -0.05 && offsetB1Y() > -maxOffset1)) &&
+      ((gamepadB?.axes[1]! > 0.09 && offsetB1Y() < maxOffset1) ||
+        (gamepadB?.axes[1]! < -0.09 && offsetB1Y() > -maxOffset1)) &&
       !gamepadB?.buttons[1].pressed &&
       !gamepadB?.buttons[0].pressed
     ) {
@@ -221,8 +221,8 @@ const SpaceField = () => {
     /* First and third columns B player */
     if (
       gamepadB?.axes &&
-      ((gamepadB?.axes[3]! > 0.05 && offsetB2Y() < maxOffset2) ||
-        (gamepadB?.axes[3]! < -0.05 && offsetB2Y() > -maxOffset2)) &&
+      ((gamepadB?.axes[3]! > 0.09 && offsetB2Y() < maxOffset2) ||
+        (gamepadB?.axes[3]! < -0.09 && offsetB2Y() > -maxOffset2)) &&
       !gamepadB?.buttons[2].pressed &&
       !gamepadB?.buttons[3].pressed
     ) {
@@ -308,6 +308,40 @@ const SpaceField = () => {
         style={{ width: `${maxWidth}px`, height: `${maxHeight}px` }}
       >
         <div
+          class={styles.area}
+          style={{
+            top: `${maxHeight / 4}px`,
+            left: `0px`,
+            height: `${maxHeight / 2}px`,
+            width: `${maxWidth / 6}px`,
+          }}
+        ></div>
+        <div
+          class={styles.midline}
+          style={{
+            top: 0,
+            left: `${maxWidth / 2}px`,
+            height: `${maxHeight}px`,
+            width: 0,
+          }}
+        >
+          <div
+            style={{
+              height: `${maxHeight / 4}px`,
+              width: `${maxHeight / 4}px`,
+            }}
+          ></div>
+        </div>
+        <div
+          class={styles.area}
+          style={{
+            top: `${maxHeight / 4}px`,
+            left: `${(maxWidth / 6) * 5}px`,
+            height: `${maxHeight / 2}px`,
+            width: `${maxWidth / 6}px`,
+          }}
+        ></div>
+        <div
           class={styles.goal}
           style={{
             top: `${(maxHeight - goalHeight) / 2}px`,
@@ -325,7 +359,6 @@ const SpaceField = () => {
             width: `${goalWidth}px`,
           }}
         ></div>
-
         <div
           class={styles.ball}
           style={{ top: `${ball().y}px`, left: `${ball().x}px` }}
@@ -351,12 +384,12 @@ const SpaceField = () => {
           );
         })}
       </div>
-      <div class={styles.positionContainer}>
+      {/* <div class={styles.positionContainer}>
         <p>X: {ball().x.toFixed()}</p>
         <p>Y: {ball().y.toFixed()}</p>
         <p>offA: {offsetA1Y().toFixed()}</p>
         <p>offB: {offsetB1Y().toFixed()}</p>
-      </div>
+      </div> */}
     </div>
   );
 };

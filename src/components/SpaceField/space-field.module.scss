@@ -1,9 +1,15 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .fieldContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   outline: 2px solid black;
   background-color: #35682d;
+  padding-bottom: 30px;
   width: 100%;
   height: 100%;
 
@@ -15,6 +21,27 @@
   .field {
     position: relative;
     outline: 2px solid white;
+
+    .area {
+      position: absolute;
+      outline: 2px solid white;
+    }
+
+    .midline {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      outline: 1px solid white;
+
+      div {
+        position: absolute;
+        transform: translate(-50%);
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        outline: 2px solid white;
+      }
+    }
 
     .ball {
       position: absolute;
@@ -33,6 +60,7 @@
       width: 20px;
       height: 20px;
       border-radius: 2px;
+      user-select: none;
     }
 
     .playerA {
