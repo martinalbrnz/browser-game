@@ -147,19 +147,23 @@ const SpaceField = () => {
     /* Axis movements */
     if (
       gamepadA?.axes &&
-      ((gamepadA?.axes[1]! > 0.05 && offsetA() < 50) ||
-        (gamepadA?.axes[1]! < -0.05 && offsetA() > -50))
+      ((gamepadA?.axes[3]! > 0.05 && offsetA() < 50) ||
+        (gamepadA?.axes[3]! < -0.05 && offsetA() > -50)) &&
+      !gamepadA?.buttons[1].pressed &&
+      !gamepadA?.buttons[0].pressed
     ) {
-      setMovA(gamepadA?.axes[1]);
-      setOffsetA(offsetA() + gamepadA?.axes[1]);
+      setMovA(gamepadA?.axes[3]);
+      setOffsetA(offsetA() + gamepadA?.axes[3]);
     }
     if (
       gamepadB?.axes &&
-      ((gamepadB?.axes[1]! > 0.05 && offsetB() < 50) ||
-        (gamepadB?.axes[1]! < -0.05 && offsetB() > -50))
+      ((gamepadB?.axes[3]! > 0.05 && offsetB() < 50) ||
+        (gamepadB?.axes[3]! < -0.05 && offsetB() > -50)) &&
+      !gamepadB?.buttons[1].pressed &&
+      !gamepadB?.buttons[0].pressed
     ) {
-      setMovB(gamepadB?.axes[1]);
-      setOffsetB(offsetB() + gamepadB?.axes[1]);
+      setMovB(gamepadB?.axes[3]);
+      setOffsetB(offsetB() + gamepadB?.axes[3]);
     }
   }
 
