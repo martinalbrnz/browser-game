@@ -3,8 +3,9 @@
   flex-direction: column;
   align-items: center;
   outline: 2px solid black;
-  width: 600px;
-  height: 580px;
+  background-color: #35682d;
+  width: 100%;
+  height: 100%;
 
   .positionContainer {
     display: flex;
@@ -13,16 +14,15 @@
 
   .field {
     position: relative;
-    width: 480px;
-    height: 360px;
-    outline: 2px solid red;
+    outline: 2px solid white;
 
     .ball {
       position: absolute;
       width: 10px;
       height: 10px;
       border-radius: 5px;
-      background-color: blue;
+      outline: 1px solid black;
+      background-color: white;
     }
 
     .player {
@@ -33,22 +33,24 @@
       width: 20px;
       height: 20px;
       border-radius: 2px;
+    }
 
+    .playerA {
+      background-color: blue;
+      span {
+        color: white;
+      }
+    }
+    .playerB {
+      background-color: chocolate;
       span {
         color: white;
       }
     }
 
-    .playerA {
-      background-color: green;
-    }
-    .playerB {
-      background-color: chocolate;
-    }
-
     .goal {
       position: absolute;
-      background-color: blueviolet;
+      background-color: #555;
     }
   }
 }

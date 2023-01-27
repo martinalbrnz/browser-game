@@ -1,53 +1,43 @@
 import { interval } from "rxjs";
 import { createSignal, onCleanup } from "solid-js";
+import setInitialPositions from "~/functions/initialPositions";
 import styles from "./space-field.module.scss";
 
 const SpaceField = () => {
   const ballSize = 10;
   const playerSize = 20;
-  const maxWidth = 480;
-  const maxHeight = 360;
+  const maxWidth = 500;
+  const maxHeight = 320;
   const goalHeight = 120;
   const goalWidth = 10;
   const tickTime = 10;
+  const maxOffset1 = 100; // second and fourth
+  const maxOffset2 = 60; // first and third
   const ballInitial = {
     x: (maxWidth - ballSize) / 2,
     y: (maxHeight - ballSize) / 2,
   };
+  const { initA, initB } = setInitialPositions(
+    maxWidth,
+    maxHeight,
+    playerSize,
+    maxOffset1,
+    maxOffset2
+  );
 
   const [ball, setBall] = createSignal(ballInitial);
   const [mov, setMov] = createSignal({ x: 1, y: 1 });
   const [score, setScore] = createSignal({ a: 0, b: 0 });
-  const [offsetA, setOffsetA] = createSignal(0);
-  const [offsetB, setOffsetB] = createSignal(0);
-  const [playersA, setPlayersA] = createSignal([
-    { id: 1, x: 10, y: 170 },
-    { id: 2, x: 70, y: 70 },
-    { id: 3, x: 70, y: 270 },
-    { id: 4, x: 70, y: 170 },
-    { id: 5, x: 198, y: 290 },
-    { id: 6, x: 198, y: 200 },
-    { id: 7, x: 198, y: 140 },
-    { id: 8, x: 198, y: 50 },
-    { id: 9, x: 326, y: 70 },
-    { id: 10, x: 326, y: 170 },
-    { id: 11, x: 326, y: 270 },
-  ]);
-  const [playersB, setPlayersB] = createSignal([
-    { id: 1, x: 450, y: 170 },
-    { id: 2, x: 390, y: 70 },
-    { id: 3, x: 390, y: 270 },
-    { id: 4, x: 390, y: 170 },
-    { id: 5, x: 262, y: 290 },
-    { id: 6, x: 262, y: 200 },
-    { id: 7, x: 262, y: 140 },
-    { id: 8, x: 262, y: 50 },
-    { id: 9, x: 134, y: 70 },
-    { id: 10, x: 134, y: 170 },
-    { id: 11, x: 134, y: 270 },
-  ]);
-  const [movA, setMovA] = createSignal(0);
-  const [movB, setMovB] = createSignal(0);
+  const [offsetA1Y, setOffsetA1Y] = createSignal(0);
+  const [offsetA2Y, setOffsetA2Y] = createSignal(0);
+  const [offsetB1Y, setOffsetB1Y] = createSignal(0);
+  const [offsetB2Y, setOffsetB2Y] = createSignal(0);
+  const [playersA, setPlayersA] = createSignal(initA);
+  const [playersB, setPlayersB] = createSignal(initB);
+  const [movA1Y, setMovA1Y] = createSignal(0);
+  const [movA2Y, setMovA2Y] = createSignal(0);
+  const [movB1Y, setMovB1Y] = createSignal(0);
+  const [movB2Y, setMovB2Y] = createSignal(0);
 
   const tick$ = interval(tickTime).subscribe(() => {
     getControls();
@@ -93,77 +83,151 @@ const SpaceField = () => {
   function movePlayers() {
     setPlayersA(
       playersA().map((player) => {
-        return { id: player.id, x: player.x, y: player.y + movA() };
+        if ([1, 8, 5, 6, 7].includes(player.id)) {
+          return { id: player.id, x: player.x, y: player.y + movA2Y() };
+        } else {
+          return { id: player.id, x: player.x, y: player.y + movA1Y() };
+        }
       })
     );
     setPlayersB(
       playersB().map((player) => {
-        return { id: player.id, x: player.x, y: player.y + movB() };
+        if ([1, 8, 5, 6, 7].includes(player.id)) {
+          return { id: player.id, x: player.x, y: player.y + movB2Y() };
+        } else {
+          return { id: player.id, x: player.x, y: player.y + movB1Y() };
+        }
       })
     );
-    setMovA(0);
-    setMovB(0);
+    setMovA1Y(0);
+    setMovA2Y(0);
+    setMovB1Y(0);
+    setMovB2Y(0);
   }
 
   function getControls() {
     const gamepadA = navigator.getGamepads()[0];
     const gamepadB = navigator.getGamepads()[1];
-    // console.log(gamepadA?.axes[1]);
 
     /* Button movements */
+    /* Second and fourth columns A player */
     if (
       gamepadA?.buttons[0].pressed &&
-      offsetA() < 50 &&
+      offsetA1Y() < maxOffset1 &&
       !gamepadA?.buttons[1].pressed
     ) {
-      setMovA(1);
-      setOffsetA(offsetA() + 1);
+      setMovA1Y(1);
+      setOffsetA1Y(offsetA1Y() + 1);
     }
     if (
       gamepadA?.buttons[1].pressed &&
-      offsetA() > -50 &&
+      offsetA1Y() > -maxOffset1 &&
       !gamepadA?.buttons[0].pressed
     ) {
-      setMovA(-1);
-      setOffsetA(offsetA() - 1);
+      setMovA1Y(-1);
+      setOffsetA1Y(offsetA1Y() - 1);
+    }
+
+    /* First and third columns */
+    if (
+      gamepadA?.buttons[2].pressed &&
+      offsetA2Y() < maxOffset2 &&
+      !gamepadA?.buttons[3].pressed
+    ) {
+      setMovA2Y(1);
+      setOffsetA2Y(offsetA2Y() + 1);
     }
     if (
+      gamepadA?.buttons[3].pressed &&
+      offsetA2Y() > -maxOffset2 &&
+      !gamepadA?.buttons[2].pressed
+    ) {
+      setMovA2Y(-1);
+      setOffsetA2Y(offsetA2Y() - 1);
+    }
+
+    /* Second and fourth columns B player */
+    if (
       gamepadB?.buttons[0].pressed &&
-      offsetB() < 50 &&
+      offsetB2Y() < maxOffset2 &&
       !gamepadB?.buttons[1].pressed
     ) {
-      setMovB(1);
-      setOffsetB(offsetB() + 1);
+      setMovB2Y(1);
+      setOffsetB2Y(offsetB2Y() + 1);
     }
     if (
       gamepadB?.buttons[1].pressed &&
-      offsetB() > -50 &&
+      offsetB2Y() > -maxOffset2 &&
       !gamepadB?.buttons[0].pressed
     ) {
-      setMovB(-1);
-      setOffsetB(offsetB() - 1);
+      setMovB2Y(-1);
+      setOffsetB2Y(offsetB2Y() - 1);
     }
 
+    /* First and third columns B player */
+    if (
+      gamepadB?.buttons[2].pressed &&
+      offsetB1Y() < maxOffset1 &&
+      !gamepadB?.buttons[3].pressed
+    ) {
+      setMovB1Y(1);
+      setOffsetB1Y(offsetB1Y() + 1);
+    }
+    if (
+      gamepadB?.buttons[3].pressed &&
+      offsetB1Y() > -maxOffset1 &&
+      !gamepadB?.buttons[2].pressed
+    ) {
+      setMovB1Y(-1);
+      setOffsetB1Y(offsetB1Y() - 1);
+    }
     /* Axis movements */
+    /* Second and fourth columns A player */
     if (
       gamepadA?.axes &&
-      ((gamepadA?.axes[3]! > 0.05 && offsetA() < 50) ||
-        (gamepadA?.axes[3]! < -0.05 && offsetA() > -50)) &&
+      ((gamepadA?.axes[3]! > 0.05 && offsetA1Y() < maxOffset1) ||
+        (gamepadA?.axes[3]! < -0.05 && offsetA1Y() > -maxOffset1)) &&
       !gamepadA?.buttons[1].pressed &&
       !gamepadA?.buttons[0].pressed
     ) {
-      setMovA(gamepadA?.axes[3]);
-      setOffsetA(offsetA() + gamepadA?.axes[3]);
+      setMovA1Y(gamepadA?.axes[3]);
+      setOffsetA1Y(offsetA1Y() + gamepadA?.axes[3]);
     }
+
+    /* First and third columns */
+    if (
+      gamepadA?.axes &&
+      ((gamepadA?.axes[1]! > 0.05 && offsetA2Y() < maxOffset2) ||
+        (gamepadA?.axes[1]! < -0.05 && offsetA2Y() > -maxOffset2)) &&
+      !gamepadA?.buttons[2].pressed &&
+      !gamepadA?.buttons[3].pressed
+    ) {
+      setMovA2Y(gamepadA?.axes[1]);
+      setOffsetA2Y(offsetA2Y() + gamepadA?.axes[1]);
+    }
+
+    /* Second and fourth columns B player */
     if (
       gamepadB?.axes &&
-      ((gamepadB?.axes[3]! > 0.05 && offsetB() < 50) ||
-        (gamepadB?.axes[3]! < -0.05 && offsetB() > -50)) &&
+      ((gamepadB?.axes[1]! > 0.05 && offsetB1Y() < maxOffset1) ||
+        (gamepadB?.axes[1]! < -0.05 && offsetB1Y() > -maxOffset1)) &&
       !gamepadB?.buttons[1].pressed &&
       !gamepadB?.buttons[0].pressed
     ) {
-      setMovB(gamepadB?.axes[3]);
-      setOffsetB(offsetB() + gamepadB?.axes[3]);
+      setMovB1Y(gamepadB?.axes[1]);
+      setOffsetB1Y(offsetB1Y() + gamepadB?.axes[1]);
+    }
+
+    /* First and third columns B player */
+    if (
+      gamepadB?.axes &&
+      ((gamepadB?.axes[3]! > 0.05 && offsetB2Y() < maxOffset2) ||
+        (gamepadB?.axes[3]! < -0.05 && offsetB2Y() > -maxOffset2)) &&
+      !gamepadB?.buttons[2].pressed &&
+      !gamepadB?.buttons[3].pressed
+    ) {
+      setMovB2Y(gamepadB?.axes[3]);
+      setOffsetB2Y(offsetB2Y() + gamepadB?.axes[3]);
     }
   }
 
@@ -239,7 +303,10 @@ const SpaceField = () => {
       <h2>
         {score().a} : {score().b}
       </h2>
-      <div class={styles.field}>
+      <div
+        class={styles.field}
+        style={{ width: `${maxWidth}px`, height: `${maxHeight}px` }}
+      >
         <div
           class={styles.goal}
           style={{
@@ -287,8 +354,8 @@ const SpaceField = () => {
       <div class={styles.positionContainer}>
         <p>X: {ball().x.toFixed()}</p>
         <p>Y: {ball().y.toFixed()}</p>
-        <p>offA: {offsetA().toFixed()}</p>
-        <p>offB: {offsetB().toFixed()}</p>
+        <p>offA: {offsetA1Y().toFixed()}</p>
+        <p>offB: {offsetB1Y().toFixed()}</p>
       </div>
     </div>
   );
