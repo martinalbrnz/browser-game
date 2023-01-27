@@ -8,8 +8,8 @@ export default function setInitialPositions(maxW: number, maxH: number, pSize: n
 	return {
 		initA: [
 			{ id: 1, x: keeperLine, y: (maxH - pSize) / 2 },
-			{ id: 2, x: firstLine, y: maxH - pSize - offset1 * 1.4 },
-			{ id: 3, x: firstLine, y: offset1 * 1.4 },
+			{ id: 2, x: firstLine, y: maxH - pSize - offset1 * 1.8 },
+			{ id: 3, x: firstLine, y: offset1 * 1.8 },
 			{ id: 4, x: firstLine, y: (maxH - pSize) / 2 },
 			{ id: 5, x: secondLine, y: (maxH - 2 * offset2) / 3 + offset2 - pSize / 2 },
 			{ id: 6, x: secondLine, y: (maxH - 2 * offset2) / 3 * 2 + offset2 - pSize / 2 },
@@ -21,8 +21,8 @@ export default function setInitialPositions(maxW: number, maxH: number, pSize: n
 		],
 		initB: [
 			{ id: 1, x: maxW - keeperLine - pSize, y: (maxH - pSize) / 2 },
-			{ id: 2, x: maxW - firstLine - pSize, y: offset1 },
-			{ id: 3, x: maxW - firstLine - pSize, y: maxH - pSize - offset1 },
+			{ id: 2, x: maxW - firstLine - pSize, y: offset1 * 1.8 },
+			{ id: 3, x: maxW - firstLine - pSize, y: maxH - pSize - offset1 * 1.8 },
 			{ id: 4, x: maxW - firstLine - pSize, y: (maxH - pSize) / 2 },
 			{ id: 5, x: maxW - secondLine - pSize, y: (maxH - 2 * offset2) / 3 * 2 + offset2 - pSize / 2 },
 			{ id: 6, x: maxW - secondLine - pSize, y: (maxH - 2 * offset2) / 3 + offset2 - pSize / 2 },
