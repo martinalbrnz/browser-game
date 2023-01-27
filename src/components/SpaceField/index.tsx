@@ -9,7 +9,7 @@ const SpaceField = () => {
   const maxHeight = 360;
   const goalHeight = 120;
   const goalWidth = 10;
-  const tickTime = 50;
+  const tickTime = 10;
   const ballInitial = {
     x: (maxWidth - ballSize) / 2,
     y: (maxHeight - ballSize) / 2,
@@ -108,21 +108,38 @@ const SpaceField = () => {
   function getControls() {
     const gamepadA = navigator.getGamepads()[0];
     const gamepadB = navigator.getGamepads()[1];
-    console.log(gamepadA);
+    // console.log(gamepadA);
 
-    if (gamepadA?.buttons[0].pressed) {
+    /* Button movements */
+    if (
+      gamepadA?.buttons[0].pressed &&
+      offsetA() < 50 &&
+      !gamepadA?.buttons[1].pressed
+    ) {
       setMovA(1);
       setOffsetA(offsetA() + 1);
     }
-    if (gamepadA?.buttons[1].pressed) {
+    if (
+      gamepadA?.buttons[1].pressed &&
+      offsetA() > -50 &&
+      !gamepadA?.buttons[0].pressed
+    ) {
       setMovA(-1);
       setOffsetA(offsetA() - 1);
     }
-    if (gamepadB?.buttons[0].pressed) {
+    if (
+      gamepadB?.buttons[0].pressed &&
+      offsetB() < 50 &&
+      !gamepadB?.buttons[1].pressed
+    ) {
       setMovB(1);
       setOffsetB(offsetB() + 1);
     }
-    if (gamepadB?.buttons[1].pressed) {
+    if (
+      gamepadB?.buttons[1].pressed &&
+      offsetB() > -50 &&
+      !gamepadB?.buttons[0].pressed
+    ) {
       setMovB(-1);
       setOffsetB(offsetB() - 1);
     }
@@ -248,6 +265,8 @@ const SpaceField = () => {
       <div class={styles.positionContainer}>
         <p>X: {ball().x.toFixed()}</p>
         <p>Y: {ball().y.toFixed()}</p>
+        <p>offA: {offsetA().toFixed()}</p>
+        <p>offB: {offsetB().toFixed()}</p>
       </div>
     </div>
   );
