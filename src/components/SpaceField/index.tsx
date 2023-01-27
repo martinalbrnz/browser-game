@@ -3,10 +3,23 @@ import { createSignal, onCleanup } from "solid-js";
 import styles from "./space-field.module.scss";
 
 const SpaceField = () => {
-  const [ball, setBall] = createSignal({ x: 190, y: 340 });
+  const ballSize = 10;
+  const playerSize = 20;
+  const maxWidth = 480;
+  const maxHeight = 360;
+  const goalHeight = 120;
+  const goalWidth = 10;
+  const tickTime = 50;
+  const ballInitial = {
+    x: (maxWidth - ballSize) / 2,
+    y: (maxHeight - ballSize) / 2,
+  };
+
+  const [ball, setBall] = createSignal(ballInitial);
   const [mov, setMov] = createSignal({ x: 1, y: 1 });
   const [score, setScore] = createSignal({ a: 0, b: 0 });
-
+  const [offsetA, setOffsetA] = createSignal(0);
+  const [offsetB, setOffsetB] = createSignal(0);
   const [playersA, setPlayersA] = createSignal([
     { id: 1, x: 10, y: 170 },
     { id: 2, x: 70, y: 70 },
@@ -33,20 +46,15 @@ const SpaceField = () => {
     { id: 10, x: 134, y: 170 },
     { id: 11, x: 134, y: 270 },
   ]);
-
-  const ballSize = 10;
-  const playerSize = 20;
-  const maxWidth = 480;
-  const maxHeight = 360;
-  const goalHeight = 330;
-  const goalWidth = 10;
-  const tickTime = 13;
-  const ballInitial = {
-    x: (maxWidth - ballSize) / 2,
-    y: (maxHeight - ballSize) / 2,
-  };
+  const [movA, setMovA] = createSignal(0);
+  const [movB, setMovB] = createSignal(0);
 
   const tick$ = interval(tickTime).subscribe(() => {
+    getControls();
+    movePlayers();
+    moveBall();
+    checkWallCollision();
+    checkPlayersCollision();
     moveBall();
     checkWallCollision();
     checkPlayersCollision();
@@ -80,6 +88,44 @@ const SpaceField = () => {
 
   function moveBall() {
     setBall({ x: ball().x + mov().x, y: ball().y + mov().y });
+  }
+
+  function movePlayers() {
+    setPlayersA(
+      playersA().map((player) => {
+        return { id: player.id, x: player.x, y: player.y + movA() };
+      })
+    );
+    setPlayersB(
+      playersB().map((player) => {
+        return { id: player.id, x: player.x, y: player.y + movB() };
+      })
+    );
+    setMovA(0);
+    setMovB(0);
+  }
+
+  function getControls() {
+    const gamepadA = navigator.getGamepads()[0];
+    const gamepadB = navigator.getGamepads()[1];
+    console.log(gamepadA);
+
+    if (gamepadA?.buttons[0].pressed) {
+      setMovA(1);
+      setOffsetA(offsetA() + 1);
+    }
+    if (gamepadA?.buttons[1].pressed) {
+      setMovA(-1);
+      setOffsetA(offsetA() - 1);
+    }
+    if (gamepadB?.buttons[0].pressed) {
+      setMovB(1);
+      setOffsetB(offsetB() + 1);
+    }
+    if (gamepadB?.buttons[1].pressed) {
+      setMovB(-1);
+      setOffsetB(offsetB() - 1);
+    }
   }
 
   function bounce(dir: string) {
