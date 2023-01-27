@@ -108,7 +108,7 @@ const SpaceField = () => {
   function getControls() {
     const gamepadA = navigator.getGamepads()[0];
     const gamepadB = navigator.getGamepads()[1];
-    // console.log(gamepadA);
+    // console.log(gamepadA?.axes[1]);
 
     /* Button movements */
     if (
@@ -142,6 +142,24 @@ const SpaceField = () => {
     ) {
       setMovB(-1);
       setOffsetB(offsetB() - 1);
+    }
+
+    /* Axis movements */
+    if (
+      gamepadA?.axes &&
+      ((gamepadA?.axes[1]! > 0.05 && offsetA() < 50) ||
+        (gamepadA?.axes[1]! < -0.05 && offsetA() > -50))
+    ) {
+      setMovA(gamepadA?.axes[1]);
+      setOffsetA(offsetA() + gamepadA?.axes[1]);
+    }
+    if (
+      gamepadB?.axes &&
+      ((gamepadB?.axes[1]! > 0.05 && offsetB() < 50) ||
+        (gamepadB?.axes[1]! < -0.05 && offsetB() > -50))
+    ) {
+      setMovB(gamepadB?.axes[1]);
+      setOffsetB(offsetB() + gamepadB?.axes[1]);
     }
   }
 
