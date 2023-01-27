@@ -1,3 +1,8 @@
+# Goals
+
+- Learn about the [Gamepad API](https://hacks.mozilla.org/2013/12/the-gamepad-api/) with Chrome
+- Learn more about [Solid Js](https://www.solidjs.com/)
+
 # SolidStart
 
 Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
