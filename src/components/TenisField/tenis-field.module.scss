@@ -1,0 +1,28 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.field {
+  position: relative;
+
+  .ball {
+    position: absolute;
+    background-color: green;
+    border-radius: 50%;
+  }
+
+  .playerA,
+  .playerB {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  .playerA {
+    background-color: blueviolet;
+  }
+
+  .playerB {
+    background-color: chocolate;
+  }
+}
