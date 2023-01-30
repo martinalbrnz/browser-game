@@ -11,22 +11,26 @@ const TenisField = () => {
   const maxWidth = 600;
   const gravity = 0.98;
   const bounceLoss = 0.8;
-  const maxSpeed = 3;
+  const maxSpeed = 5;
 
   const [ball, setBall] = createSignal({
-    x: 230,
-    y: 285,
+    x: 20,
+    y: 380,
   });
-  const [ballMov, setBallMov] = createSignal({ x: 0, y: 0 });
-  const [playerA, setPlayerA] = createSignal(220);
-  const [playerB, setPlayerB] = createSignal(360);
+  const [ballMov, setBallMov] = createSignal({ x: 3, y: -3 });
+  const [playerA, setPlayerA] = createSignal(maxWidth / 4);
+  const [movA, setMovA] = createSignal(0);
+  const [playerB, setPlayerB] = createSignal((maxWidth / 4) * 3);
+  const [movB, setMovB] = createSignal(0);
 
   const tick$ = interval(clickTime).subscribe(() => {
+    getControls();
     moveBall();
     floorBounce();
     wallBounce();
     if (checkPlayerCollision(playerA())) playerBounce(playerA());
     if (checkPlayerCollision(playerB())) playerBounce(playerB());
+    movePlayers();
   });
 
   function moveBall() {
@@ -37,7 +41,7 @@ const TenisField = () => {
   function floorBounce() {
     if (ball().y >= maxHeight - ballSize) {
       setBallMov({
-        x: ballMov().x,
+        x: ballMov().x * bounceLoss,
         y: -Math.abs(ballMov().y * bounceLoss),
       });
     }
@@ -73,7 +77,37 @@ const TenisField = () => {
     const forceX = Math.cos(angle) * maxSpeed;
     const forceY = Math.sin(angle) * maxSpeed;
     setBallMov({ x: -forceX, y: -forceY });
-    // console.log({ forceX, forceY });
+  }
+
+  function movePlayers() {
+    if (
+      (movA() > 0 && playerA() < maxWidth / 2 - playerSize - 2) ||
+      (movA() < 0 && playerA() > 0)
+    ) {
+      setPlayerA(playerA() + movA());
+    }
+    if (
+      (movB() > 0 && playerB() < maxWidth - playerSize) ||
+      (movB() < 0 && playerB() > maxWidth / 2 + 2)
+    ) {
+      setPlayerB(playerB() + movB());
+    }
+
+    setMovA(0);
+    setMovB(0);
+  }
+
+  function getControls() {
+    const gamepadA = navigator.getGamepads()[0];
+    const gamepadB = navigator.getGamepads()[1];
+
+    if (gamepadA?.axes[2]! > 0.09 || gamepadA?.axes[2]!) {
+      setMovA(gamepadA?.axes[2]!);
+    }
+
+    if (gamepadB?.axes[2]! > 0.09 || gamepadB?.axes[2]!) {
+      setMovB(gamepadB?.axes[2]!);
+    }
   }
 
   onCleanup(() => {
@@ -81,9 +115,7 @@ const TenisField = () => {
   });
   return (
     <div class={styles.fieldContainer}>
-      <h2>
-        Mx:{ballMov().x.toFixed(2)}, My:{ballMov().y.toFixed(2)}
-      </h2>
+      <h2>Score</h2>
       <div
         class={styles.field}
         style={{ width: `${maxWidth}px`, height: `${maxHeight}px` }}
