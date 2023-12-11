@@ -11,7 +11,8 @@ const TenisField = () => {
   const maxWidth = 600;
   const gravity = 0.98;
   const bounceLoss = 0.8;
-  const maxSpeed = 5;
+  const maxSpeed = 6;
+  const playerSpeed = 2;
 
   const [ball, setBall] = createSignal({
     x: 20,
@@ -101,14 +102,16 @@ const TenisField = () => {
     const gamepadA = navigator.getGamepads()[0];
     const gamepadB = navigator.getGamepads()[1];
 
-    if (gamepadA?.axes[2]! > 0.09 || gamepadA?.axes[2]!) {
-      setMovA(gamepadA?.axes[2]!);
+    if (gamepadA?.axes[2]! > 0.1 || gamepadA?.axes[2]!) {
+      setMovA(gamepadA?.axes[2]! * playerSpeed);
     }
 
-    if (gamepadB?.axes[2]! > 0.09 || gamepadB?.axes[2]!) {
-      setMovB(gamepadB?.axes[2]!);
+    if (gamepadB?.axes[2]! > 0.1 || gamepadB?.axes[2]!) {
+      setMovB(gamepadB?.axes[2]! * playerSpeed);
     }
   }
+
+  function netBounce() {}
 
   onCleanup(() => {
     tick$.unsubscribe();
